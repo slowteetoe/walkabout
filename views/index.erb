@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 100% }
+    </style>
+    <script type="text/javascript" src="jquery-2.0.2.min.js">
+    </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgBhcmutjVUbVPNO4cmWhTzzQs1d18mNw&sensor=true">
+    </script>
+    <script type="text/javascript">
+    // (item.lat, item.lon, item.business_name, item.status, item.area_code + " " + item.phone_number, item.business_type)
+
+      function dropMarker(lat, lon, desc, status, phone, business_type){
+          
+          var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lon),
+            map: map,
+            title: desc
+          });
+
+          marker.setTitle(desc);
+
+          if( status == "OUT OF BUSINESS" || status == "TO BE DROPPED" ){
+            marker.setIcon('/out-of-business.png')
+          } else if (status == "ACTIVE"){
+            marker.setIcon('/active.png')
+          } else if (status == "IN COLLECTIONS"){
+            marker.setIcon('/collections.png')
+          }
+
+          var infowindow = new google.maps.InfoWindow({
+            content: "<div><h3>" + desc + "</h3><h4>" + business_type + "<p>" + status + "</p><p>ph: " + phone + "</p></h4></div>"
+          });
+          
+          google.maps.event.addListener(marker, 'click', function() {
+            infowindow.open(map,marker);
+          });
+      }
+
+
+    
+      function initializeMap() {
+
+        var mapOptions = {
+          center: new google.maps.LatLng(36.165659999999995, -115.14115720000001),
+          zoom: 16,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
+        navigator.geolocation.getCurrentPosition( function(position) {
+
+          lat = position.coords.latitude;
+          lon = position.coords.longitude;
+    
+          var geolocate = new google.maps.LatLng(lat, lon);
+
+          dropMarker(lat, lon, "You're currently here!!!");
+
+          // var infowindow = new google.maps.InfoWindow({
+          //     map: map,
+          //     position: geolocate,
+          //     content:
+          //         '<h1>Location pinned from HTML5 Geolocation!</h1>' +
+          //         '<h2>Latitude: ' + lat + '</h2>' +
+          //         '<h2>Longitude: ' + lon + '</h2>'
+          // });
+
+          $.getJSON('/activity/36.165611999999996/-115.14102100000001/closest/400', function(data) {
+
+            $.each(data, function(i, item) {
+// lat: 36.0280680610088,
+// lon: -115.107943321956,
+// id: 453,
+// status: "OUT OF BUSINESS",
+// business_name: "ACTION DOOR SERVICES",
+// business_type: "CONTRACTOR",
+// area_code: "702",
+// phone_number: "2708275",
+// category: "CONTRACTOR IN CLV",
+// bus_address: "29 FANTASIA LN",
+// zipcode: "89074",
+// dist_mi: 9.692021800922
+              dropMarker(item.lat, item.lon, item.business_name, item.status,  item.phone_number, item.business_type);
+            });
+
+          });
+              
+        }); // end geolocate
+      }
+
+    </script>
+    <script type="text/javascript"> 
+    $(document).ready(function() {
+      google.maps.event.addDomListener(window, 'load', initializeMap);
+    });
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"/>
+  </body>
+</html>
