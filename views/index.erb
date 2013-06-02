@@ -15,7 +15,7 @@
     <script type="text/javascript">
     // (item.lat, item.lon, item.business_name, item.status, item.area_code + " " + item.phone_number, item.business_type)
 
-      function dropMarker(lat, lon, desc, status, phone, business_type){
+      function dropMarker(lat, lon, desc, status, phone, business_type, bus_address){
           
           var marker = new google.maps.Marker({
             position: new google.maps.LatLng(lat, lon),
@@ -34,7 +34,7 @@
           }
 
           var infowindow = new google.maps.InfoWindow({
-            content: "<div><h3>" + desc + "</h3><h4>" + business_type + "<p>" + status + "</p><p>ph: " + phone + "</p></h4></div>"
+            content: "<div><h3>" + desc + "</h3><h4>" + business_type + "<p>" + status + "</p><p>" + bus_address + "</p><p>ph: " + phone + "</p></h4></div>"
           });
           
           google.maps.event.addListener(marker, 'click', function() {
@@ -87,7 +87,7 @@
 // bus_address: "29 FANTASIA LN",
 // zipcode: "89074",
 // dist_mi: 9.692021800922
-              dropMarker(item.lat, item.lon, item.business_name, item.status,  item.phone_number, item.business_type);
+              dropMarker(item.lat, item.lon, item.business_name, item.status,  item.phone_number, item.business_type, item.bus_address);
             });
 
           });
