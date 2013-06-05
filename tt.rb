@@ -7,7 +7,7 @@ require 'active_support/all'
 
 DataMapper::Logger.new($stdout, :debug)
 
-DataMapper.setup(:default, 'postgres://tomorrow_today:@127.0.0.1/tomorrow_today')
+DataMapper.setup(:default, ENV['DATABASE_URL'] ||  'postgres://tomorrow_today:@127.0.0.1/tomorrow_today')
 
 get '/' do
   erb :index
