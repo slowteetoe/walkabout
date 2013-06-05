@@ -8,6 +8,8 @@ This aims to scratch that itch - we'll pull the business licence data from the C
 
 DB schema for business license data
 ---
+CREATE EXTENSION cube;
+CREATE EXTENSION earthdistance;
 CREATE TABLE business_license_info (
   id serial,
   status varchar(64),
