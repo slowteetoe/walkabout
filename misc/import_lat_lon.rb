@@ -2,7 +2,13 @@ require 'pg'
 require 'pp'
 require 'csv'
 
-CONN = PGconn.connect("localhost", 5432, "", "", "tomorrow_today")
+CONN = PGconn.connect(
+  :host => ENV['PG_HOST'],
+  :port => ENV['PG_PORT'], 
+  :user => ENV['PG_USER'], 
+  :password => ENV['PG_PASS'], 
+  :dbname => ENV['PG_DBNAME']
+)
 CONN.prepare('insertStmt', 'INSERT INTO business_license_loc (business_license_info_id, lat, lon, earth_pos) VALUES ($1, $2, $3, ll_to_earth($2, $3) )')
 
 def data
